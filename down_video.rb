@@ -15,11 +15,10 @@ video_url= f.read.scan(/<a title=".*?" href="(.*?)"/m).first[0].to_s
 flvcd_index ='http://www.flvcd.com/parse.php?format=&'
 id ='kw'
 flvcd_html = flvcd_index+id+'='+video_url
- puts video_url
- puts flvcd_html
+puts video_url
+puts flvcd_html
 
 page = Nokogiri::HTML(open(flvcd_html))   
-puts page.class
 final_url=page.css('a')[6]['href']
 exec "wget -U Mozilla #{final_url} -O #{search_word}'_video'"
 end
