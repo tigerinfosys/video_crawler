@@ -21,5 +21,5 @@ flvcd_html = flvcd_index+id+'='+video_url
 page = Nokogiri::HTML(open(flvcd_html))   
 puts page.class
 final_url=page.css('a')[6]['href']
-exec "wget #{final_url}"
+exec "wget -U Mozilla #{final_url} -O #{search_word}'_video'"
 end
