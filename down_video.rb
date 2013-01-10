@@ -5,6 +5,7 @@ require 'open-uri'
 
 home = 'http://www.soku.com/v'
 serach_id='keyword'  #search_id indicates the text tag's name in form
+puts 'Please type in any keyword you want to do search:'
 until search_word=gets.chomp  #search_word indicates the value you want to use to do serach
 end
 postit =Net::HTTP.post_form(URI.parse(home), {serach_id=>search_word})
