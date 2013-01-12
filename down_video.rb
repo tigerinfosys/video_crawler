@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
+require 'logger'
 
 module Soku
   class Video
@@ -27,25 +28,36 @@ module Soku
     return videos
   end
 end
-
 module Flvcd
   def self.convert( url )
     convert_service = "http://www.flvcd.com/parse.php?format=&kw=#{url}"
     open(URI::encode(convert_service)) do |result|
       doc = Nokogiri::HTML(result, nil, 'gb2312')
-      doc.css('script').each do |script|
-        if script.content
-          puts script.content
+          doc.css('a')[6]['href']
           #get url
           #download video 
           #exec "wget -U Mozilla #{final_url} -O #{search_word}'_video'"}
-        end
-      end
     end
-
+  end
+end
+module AdditionInfo
+  class File
+    attr_accessor :filename
+  end
+  def self.information( content )
+    Logger.new('info.yml').info content
   end
 end
 
+
 videos = Soku::search("ruby")
-url = videos[0].url # use the first for test
-Flvcd::convert( url )
+    title = videos[0].title # use the first for test
+    url = videos[0].url
+    user = videos[0].user
+    duration = videos[0].duration
+    upload_time = videos[0].upload_time
+    play_cnt = videos[0].play_cnt
+    flvcd_url=Flvcd::convert( url )
+content="\n"+'video info:'+"\n"+'title: '+title+"\n"+'url: '+url+"\n"+'user: '+user+"\n"+'duration: '+duration+"\n"+'upload time: '+upload_time+"\n"+'play cnt: '+play_cnt+"\n"+'flvcd url: '+flvcd_url    
+info=AdditionInfo::information(content)
+
