@@ -35,20 +35,39 @@ module Soku
         video.duration    = ul.css('li.v_time').css('span.num').text.strip
         video.upload_time = ul.css('li.v_pub').css('span').text.strip
         video.play_cnt    = ul.css('li.v_stat').css('span.num').text.strip
-        video.flvcd_url   = Flvcd::convert( video.title )
+        video.flvcd_url   = Flvcd::convert( video.url )
         videos << video
-        puts "%4s : [ %s ]" % [index, video.title]
+        #puts "%4s : [ %s ]" % [index, video.title]
       end
     end
     File.open( VIDEOS, "w") do |io| 
-        YAML.dump( videos, io) 
+        Psych.dump( videos, io) 
     end 
-    puts "see result at #{VIDEOS}"
+    puts "Pls see result at #{VIDEOS}"
   end
 end
 
+module Log
+  def self_generate( content )
+      Logger.new('log.yml').info content
+  end
+end
+  class Regexp
+  def scan str
+    Enumerator.new do |y|
+      str.scan(self) do
+        y << Regexp.last_match
+      end
+    end
+  end
+end
 Soku::search("ruby")
+video_yml = YAML::load(File.open("#{VIDEOS}")) 
+start_indexs = /http:\/\/f/.scan(video_yml.to_s).map{|m| m.offset(0)[0]}
+start_indexs.each do |get_urls|
+puts final_urls = video_yml.to_s[get_urls,154]
 
-# TODO: download video using flvcd_url in VIDEO 
+# TODO: download video using flvcd_url in VIDEOS 
 
-#exec "wget -U Mozilla #{final_url} -O #{search_word}'_video'"}
+#exec "wget -U Mozilla #{VIDEOS.flvcd_url} -O #{title}'_video'"
+end
