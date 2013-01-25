@@ -47,7 +47,8 @@ module Soku
   end
 end
 
-module Log
+# The module is used to match and get the final downloadable url 
+module DownloadableUrl
   def self_generate( content )
       Logger.new('log.yml').info content
   end
